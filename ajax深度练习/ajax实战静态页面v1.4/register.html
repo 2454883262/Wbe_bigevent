@@ -1,53 +1,104 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>注册</title>
-	<link rel="stylesheet" href="./css/login.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>注册</title>
+    <link rel="stylesheet" href="./css/login.css">
 </head>
+
 <body>
-	<div class="lowin">
-		<div class="lowin-brand">
-			<img src="./img/kodinger.jpg" alt="logo">
-		</div>
-		<div class="lowin-wrapper">
-			<div class="lowin-box lowin-register">
-				<div class="lowin-box-inner">
-					<form>
-						<p>创建账号</p>
-						<div class="lowin-group">
-							<label>用户名</label>
-							<input type="text" name="name" autocomplete="name" class="lowin-input">
-						</div>
-						<div class="lowin-group">
-							<label>邮箱</label>
-							<input type="email" autocomplete="email" name="email" class="lowin-input">
-						</div>
-						<div class="lowin-group">
-							<label>密码</label>
-							<input type="password" name="password" autocomplete="current-password" class="lowin-input">
-						</div>
-						<div class="lowin-group">
-							<label>确认密码</label>
-							<input type="password" name="repassword" autocomplete="current-password" class="lowin-input">
-						</div>
-						<button class="lowin-btn">
+    <div class="lowin">
+        <div class="lowin-brand">
+            <img src="./img/kodinger.jpg" alt="logo">
+        </div>
+        <div class="lowin-wrapper">
+            <div class="lowin-box lowin-register">
+                <div class="lowin-box-inner">
+                    <form id="form-res">
+                        <p>创建账号</p>
+                        <div class="lowin-group">
+                            <label>用户名</label>
+                            <input type="text" name="username" autocomplete="name" class="lowin-input">
+                        </div>
+                        <div class="lowin-group">
+                            <label>邮箱</label>
+                            <input type="email" autocomplete="email" name="email" class="lowin-input">
+                        </div>
+                        <div class="lowin-group">
+                            <label>密码</label>
+                            <input type="password" name="password" autocomplete="current-password" class="lowin-input">
+                        </div>
+                        <div class="lowin-group">
+                            <label>确认密码</label>
+                            <input type="password" name="repassword" autocomplete="current-password" class="lowin-input">
+                        </div>
+                        <button class="lowin-btn">
 							注册
 						</button>
 
-						<div class="text-foot">
-							已经有账号? <a href="" class="login-link">登录</a>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		<footer class="lowin-footer">
+                        <div class="text-foot">
+                            已经有账号? <a href="./login.html" class="login-link">登录</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <footer class="lowin-footer">
 
-		</footer>
-	</div>	
-	<script src="./lib/jquery.min.js"></script>
-	<script src="./lib/template-web.js"></script>
+        </footer>
+    </div>
+    <script src="./lib/jquery.min.js"></script>
+    <script src="./lib/template-web.js"></script>
+    <script>
+        $(function() {
+            // 表单事件
+            $('#form-res').on('submit', function(e) {
+                e.preventDefault();
+                var data = $(this).serializeArray();
+                console.log(data);
+                var obj = {};
+                data.forEach(ele => {
+                    obj[ele.name] = ele.value;
+                });
+                if (obj.username.trim() === '') {
+                    alert('用户名为空');
+                } else if (!/^\w{6,12}$/.test(obj.username)) {
+                    alert('用户名输入不正确');
+                } else if (obj.email.trim() === '') {
+                    alert('邮箱不能为空');
+                } else if (!/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(obj.email)) {
+                    alert('邮箱格式不正确');
+                } else if (obj.password.trim() === '') {
+                    alert('密码为空');
+                } else if (!/^\w{6,12}$/.test(obj.password)) {
+                    alert('密码输入格式不正确')
+                } else if (obj.repassword !== obj.password) {
+                    alert('两次密码不样');
+                } else {
+                    console.log(1);
+                    console.log(obj);
+                    $.ajax({
+                        method: 'POST',
+                        url: 'http://shop.meilian.info/api/member/register',
+                        data: $(this).serialize(),
+
+                        success: function(res) {
+                            if (res.code !== 2000) {
+                                return alert(res.msg);
+                            }
+                            console.log(res.msg);
+                            location.href = 'login.html'
+                        }
+                    })
+                }
+            })
+
+            // 调转事件
+
+        })
+    </script>
 </body>
+
 </html>
