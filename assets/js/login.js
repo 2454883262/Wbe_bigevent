@@ -73,6 +73,7 @@ $(function() {
                     return layer.msg(res.message);
                 }
                 layer.msg(res.message);
+                console.log(res);
                 // console.log(res.token);
                 // 登录成功得到token字符串 保存到localStorage
                 localStorage.setItem('token', res.token);
